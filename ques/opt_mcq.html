@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../res/jquery-3.6.2.min.js"></script>
+    <title>MCQ</title>
+    <style>
+        @font-face {
+            font-family: berlin-bold;
+            src: url(../res/font/din_bold.ttf);
+        }
+
+        @font-face {
+            font-family: berlin-regular;
+            src: url(../res/font/din_normal.ttf);
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            font-family: berlin-regular;
+            user-select: none;
+            color: #6f6f6f;
+        }
+
+        .txt-bg {
+            height: 5%;
+            font-size: 14px;
+            padding-left: 2vw;
+            font-family: berlin-bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .txt {
+            width: 80%;
+        }
+
+        .report {
+            width: 20%;
+            display: flex;
+            justify-content: flex-end;
+            font-size: 13px;
+            color: #d72828;
+            padding-right: 5px;
+            z-index: 10;
+        }
+
+        .report:active {
+            opacity: .7;
+        }
+
+        .report-img {
+            width: 14px;
+            height: 14px;
+        }
+
+        .ques-bg {
+            height: 10%;
+            display: flex;
+            align-items: center;
+            padding-left: 2vw;
+        }
+
+        .voice-img-bg {
+            width: 35px;
+            height: 35px;
+            background-color: #0030ed;
+            box-shadow: 0px 3px #00009a;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .voice-img-bg:active {
+            box-shadow: 0px 0px #bebebe;
+            transform: translateY(3px);
+        }
+
+        .voice-img {
+            width: 26px;
+            height: 26px;
+        }
+
+        span {
+            margin-left: 5px;
+            position: relative;
+        }
+
+        .ques-txt {
+            font-size: large;
+            margin-left: 5px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .underlined {
+            text-decoration: underline dotted;
+        }
+
+        .span-box {
+            background-color: white;
+            color: black;
+            border-radius: 10px;
+            box-shadow: 1px 1px 10px rgb(0 0 0 / 49%);
+            padding: 10px;
+            position: absolute;
+            top: 125%;
+            display: none;
+            z-index: 1;
+        }
+
+        .ans-show {
+            width: 90vw;
+            height: 5vh;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .ans-append {
+            width: 75vw;
+            height: fit-content;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-start;
+            border-bottom: solid 1vw #696969;
+        }
+
+        .ans-del-img {
+            width: 8vw;
+            height: 8vw;
+            visibility: hidden;
+        }
+
+        .content {
+            height: 70%;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .ques-ct-bg {
+            width: 100vw;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            align-content: center;
+        }
+
+        .q-ct,
+        .q-ct-2 {
+            font-size: 4vw;
+            border-radius: 10px;
+            border: solid 0.6vw #696969;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            margin: 2vh 5vw;
+        }
+        .appendable {
+            min-width: 30px;
+            border-radius: 10px;
+            border-bottom: solid 4px #696969;
+            display: flex;
+            align-items: center;
+            margin: 0 1.5vw;
+            margin-bottom: 1vh;
+            padding: 10px 13px;
+            font-size: 3vw;
+        }
+
+        .q-ct:active {
+            transform: scale(0.9);
+        }
+
+        .q-ct-2 {
+            margin: 0 1.5vw;
+            margin-bottom: 1vh;
+            padding: 10px 13px;
+            font-size: 3vw;
+        }
+
+        .btm {
+            height: 10%;
+            display: flex;
+            justify-content: space-around;
+            align-content: center;
+            flex-wrap: wrap;
+        }
+
+        .gray-btn,
+        .green-btn,
+        .red-btn {
+            width: 70vw;
+            padding: 10px 0;
+            font-size: 5.5vw;
+            font-family: berlin-bold;
+            background-color: #b6b6b6;
+            color: white;
+            border-radius: 10px;
+            box-shadow: 1px 3px #696969;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gray-btn:active {
+            box-shadow: 0px 0px #012201 !important;
+            transform: translate(1px, 3px);
+        }
+
+        .green-btn:active {
+            box-shadow: 0px 0px #012201 !important;
+            transform: translate(1px, 3px);
+        }
+
+        .red-btn:active {
+            box-shadow: 0px 0px #012201 !important;
+            transform: translate(1px, 3px);
+        }
+
+        .green-btn {
+            background-color: #01a80c;
+            box-shadow: 1px 3px #01620b;
+        }
+
+        .red-btn {
+            background-color: #b91111;
+            box-shadow: 1px 3px #620101;
+        }
+
+        .video-btn {
+            width: 25vw;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .video-img {
+            width: 6vw;
+            height: 6vw;
+        }
+
+        .result-bg {
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+
+        .result-ct {
+            width: 100vw;
+            height: 20vh;
+            background-color: #20cd20da;
+            position: fixed;
+            top: 80vh;
+            left: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: center;
+            transform: translateY(100%);
+            opacity: 0;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .result-txt {
+            width: 90vw;
+            font-size: 6vw;
+            color: white;
+            padding: 1vh 5vw;
+            font-family: berlin-bold;
+        }
+
+        .new-word-bg {
+            width: 100%;
+            height: 5%;
+            visibility: hidden;
+        }
+
+        .new-word-ct {
+            display: flex;
+            align-items: center;
+        }
+
+        .new-txt {
+            color: #ce82fe;
+            padding-left: 4vw;
+            font-size: 4vw;
+            font-family: berlin-bold;
+        }
+
+        #new-word,
+        #translated-txt {
+            padding-left: 2vw;
+            color: #49c0f8;
+            font-size: 5vw;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        if (localStorage.darkMode == null) $('body').css({ color: 'black' });
+        else $('body').css({ color: 'white' });
+
+        // currentLang = window.parent.currentLang;
+        // yourLang = localStorage.yourLang;
+        // langDict = JSON.parse(localStorage.langDict);
+        // currentLevel = langDict[currentLang+"-"+yourLang]
+        // lessonDict = JSON.parse(localStorage.lessonDict);
+        // currentLesson = JSON.parse(lessonDict[currentLang+"-"+yourLang]);
+        openedLevel = localStorage.openedLevel;
+        currentLang = localStorage.currentLang; yourLang = localStorage.yourLang;
+        currentSection = localStorage.currentSection;
+
+        $("body").prepend(`<script src="../res/var/${currentLang}/${currentLang}-${yourLang}/s${currentSection}/l${openedLevel}.js" id="_script">`);
+    </script>
+    <div class="txt-bg">
+        <div class="txt">Select the words in order to make below sentence</div>
+        <div class="report"><img src="../res/image/error.png" class="report-img" alt="error"> Report</div>
+    </div>
+    <div class="ques-bg">
+        <div class="voice-img-bg"><img src="../res/image/speaker.svg" class="voice-img"></div>
+        <div class="ques-txt"></div>
+    </div>
+    <div class="new-word-bg">
+        <div class="new-word-ct">
+            <div class="new-txt">New word</div>
+            <div class="new-txt2"></div><span id="translated-txt"></span> : <span id="new-word"></span>
+        </div>
+    </div>
+    </div>
+
+    <div class="content">
+        <div class="ans-show">
+            <div class="ans-append"></div>
+            <img src="../res/image/trash.svg" class="ans-del-img">
+        </div>
+        <div class="ques-ct-bg"></div>
+    </div>
+    <div class="btm">
+        <div class="gray-btn check-btn">CHECK</div>
+        <div class="green-btn video-btn"><img src="../res/image/video.png" class="video-img"> SKIP</div>
+    </div>
+    <div class="result-bg">
+        <div class="result-ct">
+            <div class="result-txt">Correct</div>
+            <div class="green-btn continue-btn">CONTINUE</div>
+            <div class="red-btn retry-btn" style="display:none;">RETRY</div>
+        </div>
+    </div>
+    <audio src="" id="read"></audio>
+    <audio src="../res/voice/correct.mp3" id="correct-aud"></audio>
+    <audio src="../res/voice/wrong.mp3" id="wrong-aud"></audio>
+    <script>
+        coloDict = JSON.parse(localStorage.colorDict);
+        green = coloDict["green"];
+        darkGreen = coloDict["darkGreen"];
+        transparentGreen = coloDict["transparentGreen"];
+        red = coloDict["red"];
+        darkRed = coloDict["darkRed"];
+        transparentRed = coloDict["transparentRed"];
+
+        appendStr = window.parent.appendStr;
+
+        clickedAns = [];
+        clickAnsIndex = [];
+        canAns = false;
+        isWrong = false;
+
+
+        function append() {
+            ans = window[appendStr + "-ans" + window.parent.chapter]
+            ans2 = window[appendStr + "-ans2" + window.parent.chapter]
+            ans3 = window[appendStr + "-ans3" + window.parent.chapter]
+            ans4 = window[appendStr + "-ans4" + window.parent.chapter]
+            ans5 = window[appendStr + "-ans5" + window.parent.chapter]
+            console.log('ans', ans)
+            console.log('ans2', ans2);
+            console.log('ans3', ans3);
+            console.log('ans4', ans4);
+            console.log('ans5', ans5);
+
+            quesTxt = window[appendStr + "-q" + window.parent.chapter];
+            splittedQues = quesTxt.split(' ');
+            splittedQuesLower = quesTxt.toLowerCase().split(' ');
+            wordIndex = [];
+            totalUnit = 2; //change this
+
+            $("body").append(`<script src="../res/var/word/allWords.js" id="_src">`);
+            for (i in splittedQuesLower) {
+                wordIndexed = false;
+                for (j in window[currentLang + "Word"]) {
+                    if (splittedQuesLower[i] == window[currentLang + "Word"][j].toLowerCase()) {
+                        console.log(window[currentLang + "Word"][j]);
+                        wordIndex.push(parseInt(j))
+                        wordIndexed = true;
+                        break;
+                    } else if (wordIndexed == false && (parseInt(j) + 1) == window[currentLang + "Word"].length) {
+                        wordIndex.push(-1);
+                        wordIndexed = true;
+                    }
+                    console.log(window[currentLang + "Word"].length)
+                    // console.log(window[currentLang + "Word"][j])
+                }
+
+                wordIndexed = false;
+                if (wordIndex[i] == -1) {
+                    //no meaning available for this word
+                    tmpVar_ = ''
+                } else {
+                    tmpVar_ = 'underlined'
+                }
+                $(".ques-txt").append(`<span class='ques_span ${tmpVar_}' id='s${wordIndex[i]}'>${splittedQues[i]}</span`);
+                $("#s" + wordIndex[i]).append(`<div class='span-box' id='b${wordIndex[i]}'>${window[currentLang + "Word"][wordIndex[i]]} : ${window[yourLang + "Word"][wordIndex[i]]}</div>`)
+
+                console.log('wordIndex', wordIndex);
+            }
+            console.log(splittedQues);
+
+            splittedAns = ans.split(' ');
+            if (ans2 != null) {
+                splittedAns2 = ans2.split(' ');
+                console.log('splittedAns2',splittedAns2);
+            }
+            if (ans3 != null) {
+                splittedAns3 = ans3.split(' ');
+                console.log('splittedAns3',splittedAns3);
+            }
+            if (ans4 != null) {
+                splittedAns4 = ans4.split(' ');
+                console.log('splittedAns4',splittedAns4);
+            }
+            if (ans5 != null) {
+                splittedAns5 = ans5.split(' ');
+            }
+            clickableLength=1;
+            for (i in splittedAns) {
+                if (i % 2 == 0) {
+                    $(".ans-append").append(`<div class='q-ct-2 appendLetter${i}'>${splittedAns[i]}</div>`);
+                    clickedAns.push(splittedAns[i]);
+                    console.log(clickedAns);
+                } else {
+                    $(".ans-append").append(`<div class='appendable' id="appendable${clickableLength}"></div>`);
+                    clickableLength++;
+                    clickedAns.push(null);
+                    console.log(clickedAns);
+                }
+            }
+
+            console.log(splittedAns);
+            for (i in splittedAns) {
+                if (i%2!=0)
+                    $(".ques-ct-bg").append(`<div onclick='ct_click(${parseInt(i) + 1})' class='q-ct q-ct${parseInt(i) + 1}'>${splittedAns[i]}</div>`);
+            }
+            // optionLen = window[appendStr+"-l"+window.parent.chapter]
+            // console.log("OptionLen is "+optionLen);
+            // for (i=1; i<= optionLen; i++) {
+            // $(".ques-ct-bg").append(`<div onclick='ct_click(${i})' class='q-ct q-ct${i}'>${window[appendStr+"-o"+i+window.parent.chapter]}</div>`);
+            // }
+
+            $(function () {
+                var parent = $(".ques-ct-bg");
+                var divs = parent.children();
+                while (divs.length) {
+                    parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
+                }
+            });
+
+            if (window[appendStr + "-m" + window.parent.chapter] == null) $(".voice-img-bg").css({ visibility: 'hidden' });
+            else $("#read").attr("src", "../res/voice/" + window[appendStr + "-m" + window.parent.chapter]);
+
+            if (window[appendStr + "-n" + window.parent.chapter] != null && localStorage.quiz == null) {
+                if (yourLang == "eng") $(".new-txt").text("New word");
+                if (yourLang == "hin") $(".new-txt").text("नए शब्द");
+                if (yourLang == "tam") $(".new-txt").text("புதிய சொல்");
+                if (yourLang == "mal") $(".new-txt").text("പുതിയ വാക്ക്");
+
+                $("#new-word").text(window[appendStr + "-n-m" + window.parent.chapter]);
+                $("#translated-txt").text(window[appendStr + "-n" + window.parent.chapter]);
+                $(".new-word-bg").css({ visibility: 'visible' });
+            }
+        }
+        append();
+
+        function Appendable(id_) {
+            $("#appendable"+id_).text('');
+        }
+
+        $(".ques_span").click(function () {
+            $(".span-box").fadeOut();
+            id_ = parseInt($(this).attr('id').replace("s", ""));
+            if (id_ == -1) {
+                return
+            }
+            console.log(id_)
+            $("#b" + id_).fadeIn();
+        });
+
+        $(".voice-img").click(function () {
+            document.getElementById("read").play();
+        });
+
+        canCtClick = true;
+        index = 2;
+        appendPos=1;
+        appendPosClicked=[];
+        for (i=1; i<clickableLength; i++) {
+            appendPosClicked.push(null);
+        }
+        console.log(appendPosClicked);
+
+        function ct_click(int) {
+            if (!canCtClick) return;
+
+            canCtClick = false;
+            canAns = true;
+            $('.span-box').fadeOut();
+            $(".gray-btn").css({ backgroundColor: green, boxShadow: '1px 3px ' + darkGreen });
+            // $(".ans-del-img").css({ visibility: 'visible' });
+
+            setTimeout(() => {
+                $(".q-ct" + int).css({ visibility: 'hidden' });
+                canCtClick = true;
+            }, 100);
+            for (i in appendPosClicked) {
+                if (appendPosClicked[i] == null) {
+                    appendPos=parseInt(i)+1
+                    break;
+                }
+            }
+            console.log(appendPos)
+            $("#appendable"+appendPos).text(splittedAns[int-1]);
+            $("#appendable"+appendPos).attr('onclick', `removeLetter(${int},${index},${appendPos})`)
+            for (i in clickedAns) {
+                if (clickedAns[i] == null) {
+                    clickIndex=i;
+                    break
+                }
+            }
+            clickedAns[clickIndex]=splittedAns[int-1];
+            appendPosClicked[appendPos-1]=1;
+            console.log(clickedAns);
+            console.log(appendPosClicked)
+            index+=2;
+            appendPos++;
+        }
+
+        function ansAppend() {
+            // $(".ans-append").empty();
+            // tmpIndex = 0;
+            // for (i = 0; i < index; i++) {
+            //     $(".ans-append").append(`<div class='q-ct-2 appendLetter${tmpIndex}' onclick="removeLetter(${tmpIndex},${clickAnsIndex[i]})">${clickedAns[i]}</div>`);
+            //     tmpIndex++;
+            // }
+        }
+
+        function removeLetter(clickedNumber, int, appendPos) {
+            appendPosClicked[appendPos-1]=null;
+            console.log("clickedNumber is", clickedNumber);
+            console.log("int is", int);
+            console.log("appendPos is", appendPos);
+            $("#appendable" + appendPos).text('');
+            clickedAns[int-1] = null;
+            console.log(clickedAns);
+            clickAnsIndex.splice(clickedNumber, 1);
+            // delete clickedAns[clickedNumber];
+            index--;
+            $(".q-ct" + clickedNumber).css({ visibility: 'visible' });
+            ansAppend();
+            console.log(clickedAns);
+        }
+
+        // $(".ans-del-img").click(function () {
+        //     canAns = false;
+
+        //     $('.span-box').fadeOut();
+
+        //     $(this).css({ visibility: 'hidden' });
+        //     clickedAns = [];
+        //     index = 0;
+        //     console.log(clickedAns);
+        //     $(".q-ct").css({ visibility: 'visible' });
+        //     $(".ans-append").empty();
+        //     $(".gray-btn").css({ backgroundColor: "#b6b6b6", boxShadow: '1px 3px #696969' });
+        // });
+
+        function arrayEquals(a, b) {
+            return Array.isArray(a) &&
+                Array.isArray(b) &&
+                a.length === b.length &&
+                a.every((val, index) => val === b[index]);
+        }
+
+        $(".gray-btn").click(function () {
+            if (!canAns)
+                return;
+
+            canAns = false;
+            console.log('clickedAns', clickedAns)
+            console.log('splittedAns', splittedAns)
+            if (arrayEquals(clickedAns, splittedAns)) {
+                //answer correct
+                ansCorrect();
+            } else if (ans2 != null) {
+                //check second possible answer
+                if (arrayEquals(clickedAns, splittedAns2)) {
+                    ansCorrect();
+                } else if (ans3 != null) {
+                    if (arrayEquals(clickedAns, splittedAns3)) {
+                        ansCorrect();
+                    } else if (ans4 != null) {
+                        if (arrayEquals(clickedAns, splittedAns4)) {
+                            ansCorrect();
+                        } else if (ans5 != null) {
+                            if (arrayEquals(clickedAns, splittedAns5)) {
+                                ansCorrect();
+                            } else { ansWrong(); }
+                        } else { ansWrong(); }
+                    } else { ansWrong(); }
+                } else { ansWrong(); }
+            } else { ansWrong(); }
+        });
+
+        function ansCorrect() {
+            if (!isWrong) window.parent.crctAns++;
+            document.getElementById("correct-aud").play();
+            $(".result-txt").text("Correct");
+            $(".continue-btn").fadeIn(0);
+            $(".retry-btn").fadeOut(0);
+            $(".result-bg").fadeIn(0);
+            $(".result-ct").css({ transform: 'translateY(0%)', opacity: '1', backgroundColor: "#20cd20da" });
+        }
+        function ansWrong() {
+            isWrong = true;
+            document.getElementById("wrong-aud").play();
+            $(".result-txt").text("Incorrect");
+            $(".retry-btn").fadeIn(0);
+            $(".continue-btn").fadeOut(0);
+            $(".result-bg").fadeIn(0);
+            $(".result-ct").css({ transform: 'translateY(0%)', opacity: '1', backgroundColor: '#cd2020d9' });
+        }
+        $(".continue-btn").click(function () {
+            window.parent.next();
+        });
+        $(".retry-btn").click(function () {
+            $(".result-ct").css({ transform: 'translateY(100%)', opacity: '0' });
+            setTimeout(() => { $(".result-bg").fadeOut(0); }, 200);
+        });
+
+        $(".report").click(function () {
+            window.parent.location = `
+mailto:vlearn.language@gmail.com?subject=Error%20reporting&
+body=${currentLang}/${yourLang}%20opnLvl-${openedLevel}%20curLes-${appendStr}%20chptr-${window.parent.chapter}%20prvLvl-${window.parent.openedPreviousLevel}%0D%0A
+(Please%20dont%20edit%20above%20line)%0D%0A
+(Write%20something%20below%20to%20clarify%20the%20error)
+`;
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../res/jquery-3.6.2.min.js"></script>
+    <link rel="stylesheet" href="../res/prism/prism.css">
+    <title>Word</title>
+<style>
+@font-face {
+    font-family: berlin-bold;
+    src: url(../res/font/din_bold.ttf);
+}
+@font-face {
+    font-family: berlin-regular;
+    src: url(../res/font/din_normal.ttf);
+}
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    font-family: berlin-regular;
+    user-select: none;
+    color: #6f6f6f;
+}
+
+.txt-bg {
+    height: 5%;
+    font-size:14px;
+    padding-left:2vw;
+    font-family: berlin-bold;
+    display: flex;
+    align-items: center;
+}
+.txt {
+    width: 80%;
+}
+.report {
+    width: 20%;
+    display: flex;
+    justify-content: flex-end;
+    font-size: 13px;
+    color: #d72828;
+    padding-right: 5px;
+} .report:active {
+    opacity: .7;
+}
+.report-img {
+    width: 14px;
+    height: 14px;
+}
+
+.ques-bg {
+    height: 10%;
+    display: flex;
+    align-items: center;
+    padding-left: 2vw;
+}
+.ques-txt{
+    font-size: 5vw;
+    margin-left: 3vw;
+}
+
+.content {
+    height: 70%;
+    display: flex; justify-content: center; flex-wrap: wrap;
+}
+.ques-ct-bg {
+    width: 100vw;
+    display: flex; justify-content: space-around; flex-wrap: wrap; align-content: center;
+}
+.q-ct {
+    width: 80vw;
+    text-align: center;
+    font-size: 4vw;
+    border-radius: 10px;
+    border: solid 1vw #696969;
+    padding: 10px 20px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 2vh 5vw;
+}
+
+.btm {
+    height: 10%;
+    display: flex; justify-content: center; align-content: center;
+    flex-wrap: wrap;
+}
+.gray-btn, .green-btn, .red-btn {
+    width: 90vw;
+    padding: 10px 0;
+    font-size: 5.5vw;
+    font-family: berlin-bold;
+    background-color: #b6b6b6;
+    color: white;
+    border-radius: 10px;
+    box-shadow: 1px 3px #696969;
+    display: flex; justify-content: center; align-items: center;
+} .gray-btn:active {
+    box-shadow: 0px 0px #012201 !important;
+    transform: translate(1px, 3px);
+} .green-btn:active {
+    box-shadow: 0px 0px #012201 !important;
+    transform: translate(1px, 3px);
+} .red-btn:active {
+    box-shadow: 0px 0px #012201 !important;
+    transform: translate(1px, 3px);
+}
+.green-btn {
+    background-color: #01a80c;
+    box-shadow: 1px 3px #01620b;
+}
+.red-btn {
+    background-color: #b91111;
+    box-shadow: 1px 3px #620101;
+}
+.result-bg {
+    width: 100vw; height: 100vh;
+    position: fixed; top: 0; left: 0;
+    display: none;
+}
+.result-ct {
+    width: 100vw; height: 20vh;
+    background-color: #20cd20da;
+    position: fixed; top: 80vh; left: 0;
+    display: flex; flex-wrap: wrap;
+    justify-content: center; align-content: center;
+    transform: translateY(100%); opacity: 0;
+    transition: all 0.2s ease-in-out;
+}
+.result-txt {
+    width: 90vw;
+    font-size: 6vw;
+    color: white;
+    padding: 1vh 5vw;
+    font-family: berlin-bold;
+}
+.new-word-bg {
+    width: 100%; height: 5%;
+    visibility: hidden;
+}
+.new-word-ct {
+    display: flex; align-items: center;
+}
+.new-txt {
+    color: #ce82fe;
+    padding-left: 4vw;
+    font-size: 4vw;
+    font-family: berlin-bold;
+}
+#new-word, #translated-txt {
+    padding-left: 2vw;
+    color: #49c0f8;
+    font-size: 5vw;
+}
+
+.wordCode {
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    padding: 2px 7px;
+    text-decoration: wavy;
+}
+</style>
+</head>
+<body>
+    <script src="../res/var/forall.js"></script>
+    <script src="../res/prism/prism.js"></script>
+    <script>
+        openedLevel = localStorage.openedLevel;
+        $("body").prepend(`<script src="../res/var/${window.parent.openedType}/${window.parent.levelType}/l${window.parent.openedLevel}.js" id="_script">`);
+    </script>
+    <div class="txt-bg"><div class="txt">Select the correct word</div><div class="report"><img src="../res/image/error.png" class="report-img" alt="error"> Report</div></div>
+
+    <div class="ques-bg">
+        <div class="ques-txt">Cold</div>
+    </div>
+    <div class="new-word-bg"><div class="new-word-ct"><div class="new-txt"></div> <div class="new-txt2"></div><span id="translated-txt"></span> : <span id="new-word"></span></div></div></div>
+
+    <div class="content">
+        <div class="ques-ct-bg">
+            <div class="q-ct q-ct1" onclick="ctClick(1)">is</div>
+            <div class="q-ct q-ct2" onclick="ctClick(2)">this</div>
+            <div class="q-ct q-ct3" onclick="ctClick(3)">cold</div>
+            <div class="q-ct q-ct4" onclick="ctClick(4)">awesome</div>
+        </div>
+    </div>
+    <div class="btm">
+        <div class="gray-btn check-btn">CHECK</div>
+    </div>
+    <div class="result-bg">
+        <div class="result-ct">
+            <div class="result-txt">Correct</div>
+            <div class="green-btn continue-btn">CONTINUE</div>
+            <div class="red-btn retry-btn" style="display:none;">RETRY</div>
+        </div>
+    </div>
+<audio src="" id="read"></audio>
+<audio src="../res/voice/correct.mp3" id="correct-aud"></audio>
+<audio src="../res/voice/wrong.mp3" id="wrong-aud"></audio>
+<script>
+clickedAns = 0;
+isWrong = false;
+
+function append() {
+ans = window["ans"+window.parent.chapter]
+console.log(ans);
+
+$(".ques-txt").html(window["q"+window.parent.chapter]);
+$(".q-ct1").text(window["o1"+window.parent.chapter]);
+$(".q-ct2").text(window["o2"+window.parent.chapter]);
+if (window["o3"+window.parent.chapter] == null) {
+    //true or false
+    $(".q-ct3").fadeOut(0);
+    $(".q-ct4").fadeOut(0);
+} else {
+    $(".q-ct3").text(window["o3"+window.parent.chapter]);
+    $(".q-ct4").text(window["o4"+window.parent.chapter]);
+}
+
+}
+append();
+
+clicked = false;
+function ctClick(int) {
+clickedAns = int; clicked = true;
+$(".q-ct").css({borderColor:'#6f6f6f', backgroundColor:'transparent'});
+$(".q-ct"+int).css({borderColor:"#84d7ff", backgroundColor:"#84d7ffad"});
+$(".gray-btn").css({backgroundColor:'#9b52d4', boxShadow:'1px 3px #380a5c'});
+}
+
+$(".gray-btn").click(function() {
+if (!clicked) return 
+ 
+if (ans == clickedAns) {
+    console.log("Answer is correct");
+    ansCorrect();
+} 
+else {
+    console.log("Answer is wrong");
+    ansWrong();
+} 
+});
+
+function ansCorrect() {
+    if (!isWrong) window.parent.crctAns++;
+    document.getElementById("correct-aud").play();
+    $(".result-txt").text("Correct");
+    $(".continue-btn").fadeIn(0);
+    $(".retry-btn").fadeOut(0);
+    $(".result-bg").fadeIn(0);
+    $(".result-ct").css({transform:'translateY(0%)', opacity:'1', backgroundColor:"#20cd20da"});
+}
+function ansWrong() {
+    isWrong = true;
+    document.getElementById("wrong-aud").play();
+    $(".result-txt").text("Incorrect");
+    $(".retry-btn").fadeIn(0);
+    $(".continue-btn").fadeOut(0);
+    $(".result-bg").fadeIn(0);
+    $(".result-ct").css({transform:'translateY(0%)', opacity:'1', backgroundColor:'#cd2020d9'});
+}
+$(".continue-btn").click(function() {
+window.parent.next();
+});
+$(".retry-btn").click(function() {
+    $(".result-ct").css({transform:'translateY(100%)', opacity:'0'});
+    setTimeout(() => {$(".result-bg").fadeOut(0);}, 200);
+});
+
+$(".report").click(function() {
+window.parent.location=`
+mailto:vlearn.language@gmail.com?subject=Error%20reporting&
+body=${currentLang}/${yourLang}%20opnLvl-${openedLevel}%20curLes-${appendStr}%20chptr-${window.parent.chapter}%20prvLvl-${window.parent.openedPreviousLevel}%0D%0A
+(Please%20dont%20edit%20above%20line)%0D%0A
+(Write%20something%20below%20to%20clarify%20the%20error)
+`;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Questions for your levels">
+    <meta name="keywords" content="language, learn, knowledge">
+    <script src="../res/jquery-3.6.2.min.js"></script>
+    <script src="../res/prism/prism.js"></script>
+    <title>Question</title>
+    <style>
+        @font-face {
+            font-family: berlin-bold;
+            src: url(../res/font/din_bold.ttf);
+        }
+
+        @font-face {
+            font-family: berlin-regular;
+            src: url(../res/font/din_normal.ttf);
+        }
+
+        body {
+            width: 100vw;
+            overflow: hidden;
+            margin: 0;
+            font-family: berlin-bold;
+            user-select: none;
+            color: #6f6f6f;
+        }
+
+        .iframe-bg {
+            max-width: 100vw;
+            display: flex;
+            justify-content: center;
+        }
+
+        #_iframe {
+            max-width: 500px;
+        }
+
+        .top {
+            width: 100vw;
+            height: 5vh;
+
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .close-img {
+            width: 25px;
+            height: 25px;
+        }
+
+        .fill-bg {
+            width: 80vw;
+            height: 2vh;
+            border-radius: 10px;
+            background-color: #6f6f6f;
+        }
+
+        .fill {
+            width: 0%;
+            height: 100%;
+            border-radius: 10px;
+            background-image: linear-gradient(#9b52d4, #380a5c);
+            transition: all 0.8s ease-in-out;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="../res/var/forall.js"></script>
+    <script>
+        openedType = localStorage.openedType;
+        dict = JSON.parse(localStorage.getItem(openedType));
+
+        openedLevel = parseInt(localStorage.openedLevel);
+        levelType= localStorage.levelType
+        maxLevel = dict['level'];
+        
+        openedPreviousLevel = localStorage.openedPreviousLevel;
+        console.log(openedPreviousLevel)
+        console.log(`../res/var/${openedType}/${levelType}/l${openedLevel}.js`)
+        $("body").prepend(`<script src="../res/var/${openedType}/${levelType}/l${openedLevel}.js" id="_script">`);
+    </script>
+    <div class="top">
+        <img src="../res/image/close.svg" class="close-img">
+        <div class="fill-bg">
+            <div class="fill"></div>
+        </div>
+    </div>
+    <div class="iframe-bg">
+        <iframe src="" id="_iframe" style="width: 100vw; height: 95vh;" frameborder="0"></iframe>
+    </div>
+    <script>
+        crctDict = dict['crct']
+        console.log('crctDict',crctDict);
+        localStorage.fullTotalAns = 0;
+
+        chapter = 1;
+
+        crctAns = 0;
+        localStorage.totalLevel = totalLevel;
+        console.log('totalLevel',totalLevel)
+        //wrongAns = 0; 
+
+        function fillBar() {
+            fillWidth = (chapter / totalLevel) * 100;
+            $(".fill").css({ width: fillWidth + '%' });
+        } fillBar();
+
+        console.log(window["type" + chapter])
+        // $("#_iframe").attr("src", window[appendStr+"-type"+chapter] +".html");
+        var frame = $('#_iframe')[0];
+        frame.contentWindow.location.replace(window["type" + chapter] + ".html");
+        console.log(window["type" + chapter] + ".html")
+
+        function Sync() {
+            sync = JSON.parse(localStorage.sync);
+            console.log('sync', sync);
+            if (openedType in sync) {
+                console.log('presented');
+                sync[openedType]+=1;
+            } else {
+                sync[openedType]=1;
+            }
+
+            localStorage.sync = JSON.stringify(sync);
+        }
+
+        function next() {
+            localStorage.crctAns = crctAns;
+            localStorage.fullTotalAns++;
+            if (chapter < totalLevel) {
+                chapter++;
+                var frame = $('#_iframe')[0];
+                setTimeout(() => {
+                    frame.contentWindow.location.replace(window["type" + chapter] + ".html");
+                }, 400);
+                //$("iframe").attr("src", window[appendStr+"-type"+chapter] +".html");
+                fillBar();
+            } else {
+                console.log("Chapter completed");
+                Sync();
+            
+                if (levelType == 'quiz') {
+                    // crctDict[`${openedLevel}`] = [crctAns, totalLevel];
+
+                    // dict['crct'] = crctDict;
+                    // localStorage.setItem(openedType, JSON.stringify(dict));
+                    location.replace("result.html");
+                } else {
+                    //its a level type
+                    if (openedPreviousLevel == null) {
+                        //unlock new level and store on server
+                        maxLevel++;
+
+                        dict['level'] = maxLevel;
+                        localStorage.setItem(openedType, JSON.stringify(dict));
+                        localStorage.openedLevel = openedLevel;
+                    }
+                    window.history.back();
+                }
+            }
+        }
+
+        function prev() {
+            localStorage.crctAns = crctAns;
+            localStorage.fullTotalAns--;
+            if (chapter > 1) {
+                chapter--;
+                var frame = $('#_iframe')[0];
+                setTimeout(() => {
+                    frame.contentWindow.location.replace(window["type" + chapter] + ".html");
+                }, 400);
+                //$("iframe").attr("src", window[appendStr+"-type"+chapter] +".html");
+                fillBar();
+            } else {
+                //its first chapter
+            }
+        }
+
+        $(".close-img").click(function () {
+            window.history.back();
+        });
+    </script>
+</body>
+
+</html>

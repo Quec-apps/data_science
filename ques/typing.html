@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../res/jquery-3.6.2.min.js"></script>
+    <link rel="stylesheet" href="../res/prism/prism.css">
+    <title>Typing</title>
+    <style>
+        @font-face {
+            font-family: berlin-bold;
+            src: url(../res/font/din_bold.ttf);
+        }
+
+        @font-face {
+            font-family: berlin-regular;
+            src: url(../res/font/din_normal.ttf);
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            font-family: berlin-regular;
+            user-select: none;
+            color: #6f6f6f;
+        }
+
+        .txt-bg {
+            height: 5%;
+            font-size: 14px;
+            padding-left: 2vw;
+            font-family: berlin-bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .txt {
+            width: 80%;
+        }
+
+        .report {
+            width: 20%;
+            display: flex;
+            justify-content: flex-end;
+            font-size: 13px;
+            color: #d72828;
+            padding-right: 5px;
+            z-index: 10;
+        }
+
+        .report:active {
+            opacity: .7;
+        }
+
+        .report-img {
+            width: 14px;
+            height: 14px;
+        }
+
+        .ques-bg {
+            height: 10%;
+            display: flex;
+            align-items: center;
+            padding-left: 2vw;
+        }
+
+        .voice-img-bg {
+            width: 10vw;
+            height: 10vw;
+            background-color: #0030ed;
+            box-shadow: 0px 3px #00009a;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-img {
+            max-width: 100%;
+            max-height: 200px;
+        }
+
+        .voice-img-bg:active {
+            box-shadow: 0px 0px #bebebe;
+            transform: translateY(3px);
+        }
+
+        .voice-img {
+            width: 8vw;
+            height: 8vw;
+        }
+
+        .ques-txt {
+            font-size: 5vw;
+            margin-left: 3vw;
+        }
+
+        .img-bg {
+            width: 100vw;
+            height: 70%;
+            display: flex;
+            justify-content: space-around;
+            align-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .img-ct {
+            width: 40vw;
+            height: 30vh;
+            border-radius: 10px;
+            border-style: solid;
+            border-width: 1.5vw;
+            border-color: #6f6f6f;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: space-around;
+        }
+
+        .img-ct-img {
+            width: 20vw;
+            height: 20vw;
+        }
+
+        .img-ct-txt {
+            width: 100%;
+            text-align: center;
+            font-size: 4vw;
+        }
+
+        .btm {
+            height: 10%;
+            display: flex;
+            justify-content: space-around;
+            align-content: center;
+        }
+        
+        .gray-btn,
+        .green-btn,
+        .red-btn {
+            width: 90%;
+            padding: 15px 0;
+            font-size: 5.5vw;
+            font-family: berlin-bold;
+            background-color: #b6b6b6;
+            color: white;
+            border-radius: 10px;
+            box-shadow: 1px 3px #696969;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .green-btn {
+            width: 45%;
+            height: 45%;
+        }
+
+        .gray-btn:active {
+            box-shadow: 0px 0px #012201 !important;
+            transform: translate(1px, 3px);
+        }
+
+        .green-btn:active {
+            box-shadow: 0px 0px #012201 !important;
+            transform: translate(1px, 3px);
+        }
+
+        .red-btn:active {
+            box-shadow: 0px 0px #012201 !important;
+            transform: translate(1px, 3px);
+        }
+
+        .green-btn {
+            background-color: #9b52d4;
+            box-shadow: 1px 3px #380a5c;
+        }
+
+        .red-btn {
+            background-color: #ff6c6c;
+            box-shadow: 1px 3px #5d2121;
+        }
+
+        .result-bg {
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+
+        .result-ct {
+            width: 100vw;
+            height: 20vh;
+            background-color: #20cd20da;
+            position: fixed;
+            top: 80vh;
+            left: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: center;
+            transform: translateY(100%);
+            opacity: 0;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .result-txt {
+            width: 90vw;
+            font-size: 6vw;
+            color: white;
+            padding: 1vh 5vw;
+            font-family: berlin-bold;
+        }
+
+        .new-word-bg {
+            width: 100%;
+            height: 5%;
+            visibility: hidden;
+        }
+
+        .new-word-ct {
+            display: flex;
+            align-items: center;
+        }
+
+        .new-txt {
+            color: #ce82fe;
+            padding-left: 4vw;
+            font-size: 4vw;
+            font-family: berlin-bold;
+        }
+
+        #new-word,
+        #translated-txt {
+            padding-left: 2vw;
+            color: #49c0f8;
+            font-size: 5vw;
+        }
+
+        .code-bg {
+            position: relative;
+            width: 85vw;
+            /* height: 25vh; */
+            overflow: auto;
+            max-width: 600px;
+            background-color: white;
+            border: solid 2px black;
+            border-radius: 10px;
+            transition: all .4s ease;
+            user-select: text;
+            margin: 0 auto;
+        }
+
+        .wordCode {
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            padding: 2px 7px;
+            text-decoration: wavy;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="forTest"></div>
+    <script src="../res/prism/prism.js"></script>
+    <script src="../res/var/forall.js"></script>
+    <script>
+        openedLevel = localStorage.openedLevel;
+        $("body").prepend(`<script src="../res/var/${window.parent.openedType}/${window.parent.levelType}/l${window.parent.openedLevel}.js" id="_script">`);
+    </script>
+
+    <div class="txt-bg">
+        <div class="txt"></div>
+        <div class="report"><img src="../res/image/error.png" class="report-img" alt="error"> Report</div>
+    </div>
+
+    <style>
+        .ct {
+            width: 100%;
+            height: 85%;
+            overflow-y: scroll;
+        }
+
+        .ti {
+            font-size: x-large;
+            margin-left: 10px;
+        }
+
+        .msg {
+            padding: 10px;
+        }
+
+        .forTest {
+            position: absolute;
+            top: 200vh;
+            left: 200vw;
+        }
+
+        .forTest,
+        input {
+            font-size: medium;
+        }
+
+        input {
+            margin: 0 2px;
+        }
+    </style>
+    <div class="ct">
+        <div class="ti"></div>
+        <div class="msg"></div>
+    </div>
+
+    <div class="btm">
+        <div class="green-btn prev-btn">Prev</div>
+        <div class="green-btn check-btn">CHECK</div>
+        <div class="result-bg">
+            <div class="result-ct">
+                <div class="result-txt">Correct</div>
+                <div class="green-btn continue-btn" style="height: 25%; background-color: #01420f; box-shadow: 1px 3px #000000;">CONTINUE</div>
+                <div class="red-btn retry-btn" style="display:none;">CONTINUE</div>
+            </div>
+        </div>
+    </div>
+    <audio src="../res/voice/correct.mp3" id="correct-aud"></audio>
+    <audio src="../res/voice/wrong.mp3" id="wrong-aud"></audio>
+    <script>
+
+        if (window.parent.levelType == 'quiz') {
+            $(".prev-btn").fadeOut(0);
+            $(".check-btn").css({width:'90%'});
+        }
+
+        $(".ti").text(window["ti" + window.parent.chapter]);
+        $(".msg").html(window["msg" + window.parent.chapter]);
+
+        isWrong = false;
+        function ansCorrect() {
+            if (!isWrong) window.parent.crctAns++;
+            document.getElementById("correct-aud").play();
+            $(".result-txt").text("Correct");
+            $(".continue-btn").fadeIn(0);
+            $(".retry-btn").fadeOut(0);
+            $(".result-bg").fadeIn(0);
+            $(".result-ct").css({ transform: 'translateY(0%)', opacity: '1', backgroundColor: "#20cd20da" });
+        }
+        function ansWrong() {
+            isWrong = true;
+            document.getElementById("wrong-aud").play();
+            $(".result-txt").text("Incorrect");
+            $(".retry-btn").fadeIn(0);
+            $(".continue-btn").fadeOut(0);
+            $(".result-bg").fadeIn(0);
+            $(".result-ct").css({ transform: 'translateY(0%)', opacity: '1', backgroundColor: '#cd2020d9' });
+        }
+
+        console.log(window['inputAns'+window.parent.chapter])
+
+        crctScore = 0;
+        $(".check-btn").click(function () {
+            $(this).css({opacity:'0'});
+            for (i = 0; i < totalInput; i++) {
+                typedAns = $('#in' + (i + 1)).val();
+                if (typedAns == window['inputAns'+window.parent.chapter][i]) {
+                    crctScore++;
+                }
+                console.log($('#in' + (i + 1)).val());
+
+            }
+            if (crctScore == totalInput) {
+                console.log('Correct');
+                ansCorrect();
+            } else {
+                console.log('Wrong');
+                ansWrong();
+            }
+        });
+
+        $(".prev-btn").click(function () {
+            localStorage.fullTotalAns++;
+            parent.prev();
+            $(".prev-btn").off();
+        });
+
+        $(".continue-btn, .retry-btn").click(function () {
+            console.log('workkkk')
+            window.parent.next();
+            
+        });
+
+        $(".report").click(function () {
+            window.parent.location = `
+                mailto:quec.developer@gmail.com?subject=Data%20Science%20Error%20Reporting&
+                body=ques-typing,%20opnLvl-${openedLevel}%20chptr-${window.parent.chapter}%20prvLvl-${window.parent.openedPreviousLevel}%0D%0A
+                (Please%20dont%20edit%20above%20line)%0D%0A
+                (Write%20something%20below%20to%20clarify%20the%20error(optional))
+            `;
+        });
+    </script>
+</body>
+
+</html>

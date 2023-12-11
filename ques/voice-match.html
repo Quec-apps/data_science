@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../res/jquery-3.6.2.min.js"></script>
+    <title>Match</title>
+    <style>
+        @font-face {
+            font-family: berlin-bold;
+            src: url(../res/font/din_bold.ttf);
+        }
+
+        @font-face {
+            font-family: berlin-regular;
+            src: url(../res/font/din_normal.ttf);
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            font-family: berlin-regular;
+            user-select: none;
+            color: #6f6f6f;
+        }
+
+        .txt-bg {
+            height: 5%;
+            font-size: 14px;
+            padding-left: 2vw;
+            font-family: berlin-bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .txt {
+            width: 80%;
+        }
+
+        .report {
+            width: 20%;
+            display: flex;
+            justify-content: flex-end;
+            font-size: 13px;
+            color: #d72828;
+            padding-right: 5px;
+            z-index: 10;
+        }
+
+        .report:active {
+            opacity: .7;
+        }
+
+        .report-img {
+            width: 14px;
+            height: 14px;
+        }
+
+        .img-bg {
+            width: 100vw;
+            height: 95%;
+            display: flex;
+            justify-content: space-around;
+            align-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .ct {
+            width: 35vw;
+            height: 10vh;
+            border-radius: 10px;
+            border-style: solid;
+            border-width: 1vw;
+            border-color: #707070;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-content: space-around;
+            font-size: 5vw;
+        }
+
+        .ct-spk-img {
+            width: 11vw;
+            height: 11vw;
+        }
+
+        .wave-img {
+            width: 15vw;
+        }
+
+        .left-side,
+        .right-side {
+            width: 45vw;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: space-around;
+        }
+
+        .gray-btn,
+        .green-btn {
+            width: 90vw;
+            padding: 10px 0;
+            font-size: 5.5vw;
+            font-family: berlin-bold;
+            background-color: #b6b6b6;
+            color: white;
+            border-radius: 10px;
+            box-shadow: 1px 3px #696969;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gray-btn:active {
+            box-shadow: 0px 0px #012201 !important;
+            transform: translate(1px, 3px);
+        }
+
+        .green-btn:active {
+            box-shadow: 0px 0px #012201 !important;
+            transform: translate(1px, 3px);
+        }
+
+        .green-btn {
+            background-color: #01a80c;
+            box-shadow: 1px 3px #01620b;
+        }
+
+        .result-bg {
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+
+        .result-ct {
+            width: 100vw;
+            height: 20vh;
+            background-color: #20cd20da;
+            position: fixed;
+            top: 80vh;
+            left: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; align-content: center;
+            transform: translateY(100%);
+            opacity: 0;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .result-txt {
+            width: 90vw;
+            font-size: 6vw;
+            color: white;
+            padding: 1vh 5vw;
+            font-family: berlin-bold;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        if (localStorage.darkMode == null) {
+            $('body').css({ color: 'black' });
+            $('.ct').css({ color: 'white', borderColor: 'white' });
+        }
+        else {
+            $('body').css({ color: 'white' });
+            $('.ct').css({ color: 'black', borderColor: 'black' });
+        }
+
+        // currentLang = window.parent.currentLang;
+        // yourLang = localStorage.yourLang;
+        // langDict = JSON.parse(localStorage.langDict);
+        // currentLevel = langDict[currentLang + "-" + yourLang]
+        // lessonDict = JSON.parse(localStorage.lessonDict);
+        // currentLesson = JSON.parse(lessonDict[currentLang + "-" + yourLang]);
+        openedLevel = parseInt(localStorage.openedLevel);
+        currentLang = localStorage.currentLang; yourLang = localStorage.yourLang;
+
+        currentSection=localStorage.currentSection;
+
+        currentSection=localStorage.currentSection;
+
+        $("body").prepend(`<script src="../res/var/${currentLang}/${currentLang}-${yourLang}/s${currentSection}/l${openedLevel}.js" id="_script">`);
+    </script>
+    <div class="txt-bg">
+        <div class="txt">Match the following pairs</div>
+        <div class="report"><img src="../res/image/error.png" class="report-img" alt="error"> Report</div>
+    </div>
+    <div class="img-bg">
+        <div class="left-side">
+        </div>
+        <div class="right-side">
+
+        </div>
+    </div>
+    <div class="result-bg">
+        <div class="result-ct">
+            <div class="result-txt">Correct</div>
+            <div class="green-btn continue-btn">CONTINUE</div>
+        </div>
+    </div>
+    <audio src="../res/voice/correct.mp3" id="correct-aud"></audio>
+    <audio src="../res/voice/wrong.mp3" id="wrong-aud"></audio>
+
+</body>
+<script>
+    coloDict = JSON.parse(localStorage.colorDict);
+    green = coloDict["green"];
+    darkGreen = coloDict["darkGreen"];
+    transparentGreen = coloDict["transparentGreen"];
+    red = coloDict["red"];
+    darkRed = coloDict["darkRed"];
+    transparentRed = coloDict["transparentRed"];
+
+    appendStr = window.parent.appendStr;
+
+    clickedAns = 0;
+    isWrong = false;
+
+    function append() {
+        totalOption = window[appendStr + "-l" + window.parent.chapter];
+        ansMode = "left";
+        answered = 0;
+
+        for (i = 1; i <= totalOption; i++) {
+            $(".left-side").append(`
+<div onclick="ctClick(${i}, 'left')" class="ct l-ct l-ct${i}">
+<img src="../res/image/blue_speaker.svg" class="ct-spk-img">
+<img src="../res/image/wave.svg" class="wave-img">
+<audio src="../res/voice/${window[appendStr + "-o-l-" + i + window.parent.chapter]}" id="aud${i}"></audio>
+</div>
+`);
+            $(".right-side").append(`<div onclick="ctClick(${i}, 'right')" class="ct r-ct r-ct${i}">${window[appendStr + "-o-r-" + i + window.parent.chapter]}</div>`);
+
+        }
+        $(function () {
+            var parent = $(".left-side");
+            var divs = parent.children();
+            while (divs.length) {
+                parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
+            }
+        });
+        $(function () {
+            var parent = $(".right-side");
+            var divs = parent.children();
+            while (divs.length) {
+                parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
+            }
+        });
+    }
+    append();
+
+    function ctClick(int, clickedMode) {
+        clickedAns = int;
+        if (clickedMode == "left") {
+            document.getElementById("aud" + int).play();
+        }
+        if (clickedMode == "left") {
+            //left side can select
+            leftSelect = int;
+            ansMode = "right";
+            $(".ct").css({ borderColor: 'inherit', backgroundColor: 'transparent' });
+            $(".l-ct" + int).css({ borderColor: '#0b8e02', backgroundColor: '#06bc0694' });
+            //$(".gray-btn").css({backgroundColor:'#0b8e02', boxShadow:'1px 3px #055107'});
+        }
+        if (ansMode == "right" && clickedMode == "right") {
+            //right side can select
+            rightSelect = int;
+            ansMode = "left";
+            if (leftSelect == rightSelect) {
+                console.log("Answer is correct");
+                answered++;
+                $(".r-ct").css({ borderColor: 'inherit', backgroundColor: 'transparent' });
+                $(".r-ct" + int).css({ borderColor: '#0b8e02', backgroundColor: '#06bc0694' });
+                setTimeout(() => { $(".l-ct" + leftSelect + ", .r-ct" + rightSelect).css({ visibility: 'hidden' }); }, 400);
+                if (answered == totalOption) {
+                    console.log("You win!");
+                    ansCorrect();
+                }
+
+            } else {
+                isWrong = true;
+                console.log("Answer is wrong");
+                $(".r-ct" + rightSelect).css({ borderColor: 'red', backgroundColor: '#ff000094' });
+                $(".l-ct" + leftSelect).css({ borderColor: 'red', backgroundColor: '#ff000094' });
+            }
+        }
+    }
+
+    function ansCorrect() {
+        if (!isWrong) window.parent.crctAns++;
+        document.getElementById("correct-aud").play();
+        $(".result-txt").text("Correct");
+        $(".result-bg").fadeIn(0);
+        $(".result-ct").css({ transform: 'translateY(0%)', opacity: '1', backgroundColor: "#20cd20da" });
+    }
+    $(".continue-btn").click(function () {
+        window.parent.next();
+    });
+
+    $(".report").click(function () {
+        window.parent.location = `
+mailto:vlearn.language@gmail.com?subject=Error%20reporting&
+body=${currentLang}/${yourLang}%20opnLvl-${openedLevel}%20curLes-${appendStr}%20chptr-${window.parent.chapter}%20prvLvl-${window.parent.openedPreviousLevel}%0D%0A
+(Please%20dont%20edit%20above%20line)%0D%0A
+(Write%20something%20below%20to%20clarify%20the%20error)
+`;
+    });
+</script>
+
+</html>

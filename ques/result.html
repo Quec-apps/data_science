@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../res/jquery-3.6.2.min.js"></script>
+    <title>result</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+}
+@font-face {
+    font-family: berlin-bold;
+    src: url(../res/font/din_bold.ttf);
+}
+@font-face {
+    font-family: berlin-regular;
+    src: url(../res/font/din_normal.ttf);
+}
+body {
+    width: 100vw;
+    overflow: hidden;
+    margin: 0;
+    font-family: berlin-bold;
+    user-select: none;
+    color: #6f6f6f;
+    
+}
+
+.content {
+    width: 100%;
+    height: 90vh;
+    position: relative;
+    z-index: 1;
+}
+.img-bg {
+    display: flex; justify-content: center;
+    padding-top: 5vh;
+}
+.char-img {
+    width: 60vw; max-width: 200px;
+    height: 60vw; max-height: 200px;
+    margin: 0 auto;
+}
+
+.btm {
+    height: 10vh;
+    display: flex; justify-content: center; align-content: center;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+}
+.green-btn {
+    width: 90vw; max-width: 500px;
+    height: 60px;
+    font-size: larger;
+    font-family: berlin-bold;
+    background-color: #9b52d4;
+    color: white;
+    border-radius: 10px;
+    box-shadow: 1px 3px #310851;
+    display: flex; justify-content: center; align-items: center;
+} .green-btn:active {
+    box-shadow: 0px 0px #012201 !important;
+    transform: translate(1px, 3px);
+} 
+.crct-ans-bg {
+    padding-top: 3vh;
+}
+.crct-ans-txt, .crct-ans-txt2 {
+    text-align: center;
+    font-size: x-large;
+    color: #9b52d4;
+} .crct-ans-txt2 {
+    font-size: xx-large;
+    color: #ffc801;
+    display: flex; justify-content: center;
+}
+
+.change-bg {
+    width: 100%;
+    text-align: center;
+    font-size: x-large;
+    color: #01a80c;
+    display: none;
+}
+.confetti {
+    width: 100vw;
+    height: 100vh;
+    position: fixed; top: 0; left: 0;
+    z-index: 0;
+    display: none;
+}
+</style>
+</head>
+<body>
+<script>
+if (localStorage.darkMode != null) $("body").css({backgroundColor:'black'});
+else $("body").css({backgroundColor:'white'});
+</script>
+<canvas class="confetti" id="canvas"></canvas>
+
+<div class="content">
+    <div class="img-bg">
+        <img src="../res/image/character/cow.svg" class="char-img">
+    </div>
+    <style>
+        .sh-bg {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+        }
+        .sh {
+            width: 40vw;
+            padding: 5px 0;
+            border: solid 4px #9b52d4;
+            border-radius: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: sh 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) 1;
+        }
+        @keyframes sh {
+            0% {transform: scale(0); opacity: 0;}
+            100% {transform: scale(1); opacity: 1;}
+        }
+        .sh-txt {
+            width: 100%;
+            text-align: center;
+            margin: 10px 0;
+            font-size: 30px;
+            color: #9b52d4;
+        }
+        .sh-crct-bg {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            margin: 10px 0;
+        }
+        .crct-sec {
+            display: flex;
+            justify-content: center;
+            align-content: center;
+        }
+        .tick-img,
+        .cross-img {
+            width: 20px;
+            height: 20px;
+            background-color: #61b08b;
+            border-radius: 50%;
+            padding: 5px;
+        }
+
+        .cross-img {
+            background-color: #ff6c6c;
+        }
+        .num {
+            margin-left: 5px;
+            font-size: 25px;
+        }
+    </style>
+    <div class="sh-bg">
+        <div class="sh">
+            <div class="sh-txt">Old</div>
+            <div class="sh-crct-bg">
+                <div class="crct-sec">
+                    <img class="tick-img" src="../res/image/tick.svg">
+                    <div class="num" id="old-crct-num">0</div>
+                </div>
+                <div class="crct-sec">
+                    <img class="cross-img" src="../res/image/cross.svg">
+                    <div class="num" id="old-wrong-num">0</div>
+                </div>
+            </div>
+        </div>
+        <div class="sh">
+            <div class="sh-txt">New</div>
+            <div class="sh-crct-bg">
+                <div class="crct-sec">
+                    <img class="tick-img" src="../res/image/tick.svg">
+                    <div class="num" id="new-crct-num">0</div>
+                </div>
+                <div class="crct-sec">
+                    <img class="cross-img" src="../res/image/cross.svg">
+                    <div class="num" id="new-wrong-num">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="crct-ans-bg">
+        <div class="crct-ans-txt">Level Completed</div>
+        <div class="crct-ans-txt2" id="percent">0%</div>
+        <div class="change-bg improve-bg">You improved <span id="improve">0</span>%</div>
+        <div class="change-bg worse-bg">You are <span id="worse">0</span>% worse</div>
+    </div>
+</div>
+<div class="btm">
+    <div class="green-btn check-btn">CONTINUE</div>
+</div>
+<script src="../res/confetti.js"></script>
+<script>
+crctAns = parseInt(localStorage.crctAns);
+totalAns = parseInt(localStorage.fullTotalAns);
+
+openedLevel = parseInt(localStorage.openedLevel);
+openedType = localStorage.openedType;
+levelType= localStorage.levelType
+
+dict = JSON.parse(localStorage.getItem(openedType));
+
+maxLevel = dict['level'];
+
+crctDict = dict['crct'];
+console.log("Geting1");
+
+//check whether the key is already present
+if (crctDict.hasOwnProperty(`k${openedLevel}`)) {
+    //is present
+    console.log('Its present');
+    previousCrctAns = crctDict["k"+openedLevel][0];
+} else {
+    previousCrctAns = 0;
+}
+
+$("#old-crct-num").text(previousCrctAns);
+$("#old-wrong-num").text((totalAns - previousCrctAns));
+
+$("#new-crct-num").text(crctAns);
+$("#new-wrong-num").text(totalAns - crctAns);
+
+console.log("crctDict",crctDict["k"+openedLevel]);
+openedSkipedLevel = false;
+
+totalAns = localStorage.fullTotalAns;
+_crctAns = parseInt(localStorage.crctAns);
+
+console.log("Saving5");
+
+oldPercent = parseInt(((previousCrctAns/totalAns)*100).toFixed(0));
+newPercent = parseInt(((_crctAns/totalAns)*100).toFixed(0));
+console.log(oldPercent);
+console.log(newPercent);
+appendAnim(newPercent);
+
+if (newPercent > oldPercent) {
+    console.log("You improved");
+    $(".confetti").fadeIn(0);
+    $("#improve").text(newPercent - oldPercent);
+    $(".improve-bg").css({color:'#01a80c'});
+    $(".improve-bg").fadeIn();
+
+    crctDict[`k${openedLevel}`] = [_crctAns, totalAns];
+    dict['crct'] = crctDict;
+    localStorage.setItem(openedType, JSON.stringify(dict));
+
+    console.log("Saving6");
+    localStorage.canSync++;
+} else if (newPercent < oldPercent) {
+    console.log("No improve");
+    $("#worse").text(oldPercent - newPercent);
+    $(".worse-bg").css({color:'#b91111'});
+    $(".worse-bg").fadeIn();
+}
+
+function appendAnim(percent) {
+    _tmp = 0;
+    console.log(percent)
+    intrvl = setInterval(() => {
+        console.log("Caleed");
+        _tmp+= parseFloat(100/percent);
+        $("#percent").text(_tmp.toFixed(0)+"%");
+        if (_tmp >= percent) {
+            clearInterval(intrvl);
+            $("#percent").text(percent+"%");
+        }
+    }, (1/percent)*1500);
+    console.log((100/percent).toFixed(0));
+}
+
+$(".check-btn").click(function() {
+setTimeout(() => {
+    window.history.back();
+}, 400);
+});
+</script>
+</body>
+</html>

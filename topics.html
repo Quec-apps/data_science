@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="res/jquery-3.6.2.min.js"></script>
+    <title>Learn Data Science</title>
+    <style>
+        @font-face {
+            font-family: "din_bold";
+            src: url(res/font/din_bold.ttf);
+        }
+
+        html {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        body {
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #f2f3fc;
+            font-family: din_bold;
+            font-weight: 1000;
+            color: #757575;
+            user-select: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .top-bg {
+            width: 100%;
+            height: 30vh;
+            background-color: #9b52d4;
+            border-radius: 0 0 40px 40px;
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: center;
+        }
+
+        .bubble {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            position: absolute;
+            opacity: 0;
+            transition: all .3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .bub1 {
+            width: 70px;
+            height: 70px;
+            top: 14%;
+            left: -10%;
+        }
+
+        .bub2 {
+            width: 100px;
+            height: 100px;
+            top: 38%;
+            right: -10%;
+        }
+
+        h1 {
+            width: 100%;
+            margin: 0;
+            padding-left: 15px;
+            color: white;
+            font-size: 25px;
+            font-weight: 100;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: all .3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        h2,
+        h3 {
+            width: 100%;
+            font-size: medium;
+            margin: 2px;
+        }
+
+        h3 {
+            text-align: center;
+        }
+
+        /* .recent-bg {
+            width: 90%;
+            height: 90px;
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.525);
+            padding: 7px;
+            background-color: white;
+            border-radius: 20px;
+            margin: 0 auto;
+            transform: translateY(-50px);
+        } */
+
+        .topic-bg {
+            width: 100%;
+            height: 70vh;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            transform: translateX(50%);
+            opacity: 0;
+            transition: all .3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .topic-txt {
+            width: 100%;
+            font-size: 25px;
+            margin: 10px 0;
+            padding-left: 10px;
+        }
+
+        .main-ti {
+            width: 100%;
+            text-align: center;
+            font-size: 25px;
+        }
+
+        .full-bg {
+            width: 100%;
+            max-width: 500px;
+            margin: 10px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .ct-bg {
+            width: 95%;
+            padding: 12px 0px;
+            border-radius: 15px;
+            background-color: #fff;
+            box-shadow: 1px 1px 3px #000000;
+            display: flex;
+            align-items: center;
+        }
+
+        .ct-num {
+            width: 15%;
+            font-size: 27px;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ct-sec2 {
+            width: 55%;
+        }
+
+        .ti-sec {
+            display: flex;
+            padding-bottom: 8px;
+            align-items: center;
+        }
+
+        .btn-sec {
+            display: flex;
+        }
+
+        .ct-ti {
+            font-size: 20px;
+            margin-right: 5px;
+        }
+
+        .ct-sec3 {
+            width: 30%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn {
+            background-color: #61b08b;
+            font-size: medium;
+            color: white;
+            padding: 5px 15px;
+            margin-right: 3px;
+            border-radius: 10px;
+        }
+
+        .btn:active {
+            opacity: .4;
+        }
+
+        .tick-img,
+        .cross-img {
+            width: 10px;
+            height: 10px;
+            background-color: #61b08b;
+            border-radius: 50%;
+            padding: 5px;
+        }
+
+        .cross-img {
+            background-color: #ff6c6c;
+        }
+
+        .crct-sec-bg {
+            width: 100%;
+            display: flex;
+            padding: 7px 0;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .crct-sec {
+            display: flex;
+            justify-content: center;
+            align-content: center;
+        }
+
+        .learn-topic {
+            text-align: center;
+            font-size: 12px;
+            text-decoration: underline;
+        }
+
+        .learn-topic:active {
+            opacity: .4;
+        }
+
+        .tree-con {
+            width: 100%;
+            display: none;
+            flex-wrap: wrap;
+        }
+
+        .tree-bg {
+            width: 100%;
+        }
+
+        .stem {
+            width: 4px;
+            height: 19px;
+            background-color: #707070;
+            transform: translateX(29px);
+        }
+
+        .node-bg {
+            display: flex;
+            align-items: center;
+            transform: translateX(18px);
+        }
+
+        .node {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: solid 4px #707070;
+        }
+
+        .node-txt {
+            padding-left: 5px;
+        }
+
+        .completed-bg {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: scale(0); opacity: 0;
+            transition: all .3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .comp-ct-bg {
+            width: 120px;
+            height: 120px;
+            /* background-color: firebrick; */
+            position: relative;
+
+        }
+
+        .comp {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .comp-1 {
+            width: 80px;
+            height: 80px;
+            background-color: #ffffff31;
+            border-radius: 50%;
+            animation: comp1 5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+        }
+        @keyframes comp1 {
+            0% {transform: translate(-50%, -50%) scale(1);}
+            50% {transform: translate(-50%, -50%) scale(1.8);}
+            100% {transform: translate(-50%, -50%) scale(1);}
+        }
+
+        .comp-2 {
+            width: 80px;
+            height: 80px;
+            background-color: #fffcfca5;
+            border-radius: 50%;
+            animation: comp2 5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+        }
+        @keyframes comp2 {
+            0% {transform: translate(-50%, -50%) scale(1);}
+            50% {transform: translate(-50%, -50%) scale(1.4);}
+            100% {transform: translate(-50%, -50%) scale(1);}
+        }
+
+        .comp-3 {
+            width: 80px;
+            height: 80px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-items: center;
+            align-content: center;
+            color: #964ad3;
+        }
+        .percent {
+            width: 100%;
+            text-align: center;
+            font-size: 30px;
+        }
+        .comp-txt {
+            width: 100%;
+            text-align: center;
+            font-size: 13px;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-bg">
+        <div class="bubble bub1"></div>
+        <div class="bubble bub2"></div>
+        <h1>Python</h1>
+        <div class="completed-bg">
+            <div class="comp-ct-bg">
+                <div class="comp comp-1"></div>
+                <div class="comp comp-2"></div>
+                <div class="comp comp-3">
+                    <span class="percent"></span>
+                    <span class="comp-txt">Completed</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="recent-bg">
+        <h2>Recent</h2>
+    </div> -->
+    <div class="topic-bg">
+        <div class="topic-txt">Topic</div>
+
+
+    </div>
+    <script>
+        openedType = localStorage.openedType;
+        
+        dict = JSON.parse(localStorage.getItem(openedType));
+        console.log(dict);
+        crctDict = dict['crct'];
+        console.log('CrctDict', crctDict);
+
+        // crctDict[1][0] = 53;
+        // dict['crct'] = crctDict;
+        // console.log('after dict',dict);
+
+        function LearnTopic(id) {
+            $('#tree-con' + id).css({ display: 'flex' });
+        }
+
+        function Heading(str) {
+            $(".topic-bg").append(`<div class='main-ti'>${str}</div>`);
+        }
+
+        index = 0;
+        function Append_(ti, tree_ct) {
+            index++;
+            $(".topic-bg").append(`
+        <div class="full-bg" id="full-bg${index}">
+            <div class="ct-bg">
+                <div class="ct-num">${index}</div>
+                <div class="ct-sec2">
+                    <div class="ti-sec">
+                        <div class="ct-ti">${ti}</div><img class="tick-img" id="completed${index}"
+                            src="res/image/tick.svg">
+                    </div>
+                    <div class="btn-sec">
+                        <div class="btn" onclick="LearnClick(${index})" id='learn${index}'>LEARN</div>
+                        <div class="btn" onclick="QuizClick(${index})" id='quiz${index}'>QUIZ</div>
+                    </div>
+                </div>
+                <div class="ct-sec3">
+                    <div class="crct-sec-bg" id="crct-bg${index}">
+                        <div class="crct-sec">
+                            <img class="tick-img" src="res/image/tick.svg">
+                            <div class="num" id="crct-num${index}">0</div>
+                        </div>
+                        <div class="crct-sec">
+                            <img class="cross-img" src="res/image/cross.svg">
+                            <div class="num" id="wrong-num${index}">0</div>
+                        </div>
+                    </div>
+                    <div class="learn-topic" onclick="LearnTopic(${index})">Learning Topic</div>
+                </div>
+            </div>
+            <div class="tree-con" id="tree-con${index}">
+                ${TreeAppend(tree_ct)}
+            </div>
+        </div>
+        `);
+        }
+
+        function TreeAppend(tree_ct) {
+            empytStr = '';
+            for (i in tree_ct) {
+                addStr = `
+            <!--tree-->
+            <div class="tree-bg">
+                <!--tree-->
+                <div class="stem"></div>
+                <div class="node-bg">
+                    <div class="node"></div>
+                    <div class="node-txt">${tree_ct[i]}</div>
+                </div>
+            </div>
+            `
+                empytStr += addStr;
+            }
+            return empytStr;
+        }
+
+        localStorage.removeItem('openedPreviousLevel');
+
+        function LearnClick(id) {
+            if (id>maxLevel)
+                return;
+            if (id<maxLevel)
+                localStorage.openedPreviousLevel = true;
+
+            localStorage.levelType = 'level';
+            localStorage.openedLevel = id;
+            setTimeout(() => {
+                parent.location='ques/ques.html';
+            }, 400);
+        }
+        function QuizClick(id) {
+            if (id>maxLevel)
+                return;
+            if (id<maxLevel)
+                localStorage.openedPreviousLevel = true;
+
+            localStorage.levelType = 'quiz';
+            localStorage.openedLevel = id;
+            setTimeout(() => {
+                parent.location='ques/ques.html';
+            }, 400);
+        }
+        if (openedType == 'python') {
+            Heading('Intro');
+            Append_('Intro to Python', ['About Python', 'Python Syntax', 'Python Indentation', 'Comments']);
+            Heading('Variables & Data types');
+            Append_('Variables', ['Variables']);
+            Append_('Data Types', ['Python Data Types', 'Most Used Data Types', 'Getting the Data types']);
+            Append_('Numbers', ['Python Numbers', 'int', 'float', 'complex', 'Type Conversion']);
+            Append_('String', ['Python Strings', 'Multiline Strings', 'Strings are arrays', 'String Length', 'Slicing', 'Slice from the start', 'Slice to the end', 'Negative Indexing', 'Modify Strings', 'String Format', 'Escape Character']);
+            Append_('Booleans', ['Most Values are True', 'Some Values are False']);
+            Append_('Lists', ['List items', 'List Length', 'List Items - Data types', 'Data type of List', 'Python Collections(Arrays)', 'Access Items', 'Change Item Value', 'Change List items', 'Insert Items', 'Add List Items', 'Remove List Items', 'Sort Lists', 'Copy Lists', 'Join Lists', 'List Methods']);
+            Append_('Tuples', ['3knn', '3auc']);
+            Append_('Sets', ['3knn', '3auc']);
+            Append_('Dictionaries', ['3knn', '3auc']);
+            Heading('Operators');
+            Append_('Operators', ['3knn', '3auc']);
+            Heading('Conditional Statement');
+            Append_('If...Else', ['3knn', '3auc']);
+            Heading('Loops');
+            Append_('While Loop', ['3knn', '3auc']);
+            Append_('For Loop', ['3knn', '3auc']);
+            Heading('Functions');
+            Append_('Function', ['3knn', '3auc']);
+            Append_('Lambda', ['3knn', '3auc']);
+        } else if (openedType == 'ml') {
+            // Heading('Intro');
+            Append_('Intro to Machine Learning', ['About Python', 'Python Syntax', 'Python Indentation', 'Comments']);
+            Append_('Mean Median Mode', ['About Python',]);
+            Append_('Standard Deviation', ['About Python',]);
+            Append_('Percentile', ['About Python',]);
+            Append_('Data Distribution', ['About Python',]);
+            Heading("Let's start");
+            Append_('What is Machine Learning?', ['About Python',]);
+            Append_('Best Python libraries for Machine Learning?', ['About Python',]);
+            Heading("Data Preprocessing");
+            Append_('Introduction to Data in Machine Learning', ['About Python',]);
+            Append_('Understanding Data Processing', ['About Python',]);
+            Append_('Create Test DataSets using Sklearn', ['About Python',]);
+            Append_('Data Cleaning', ['About Python',]);
+            Append_('One Hot Encoding', ['About Python',]);
+            Append_('Dummy variable trap in Regression Models', ['About Python',]);
+            Append_('Exploratory Data Analysis (EDA)', ['About Python',]);
+            Append_('Feature Scaling', ['About Python',]);
+            Append_('Feature Engineering', ['About Python',]);
+            Append_('Label Encoding', ['About Python',]);
+            Append_('Handling Imbalanced Data', ['About Python',]);
+            Heading("Algorithm");
+            Append_('What is Algorithm in ML?', ['About Python',]);
+            Append_('Linear Regression', ['About Python',]);
+            Append_('Logistics Regression', ['About Python',]);
+            Append_('Polynomial Regression', ['About Python',]);
+            Append_('K Neareast Neighbour (KNN)', ['About Python',]);
+            Append_('Decision Tree', ['About Python',]);
+
+        }
+        
+        totalMainLevel = index;
+        openedType = localStorage.openedType;
+        maxLevel = dict['level'];
+
+        
+
+        compPercent = ((maxLevel-1)/totalMainLevel*100).toFixed(0);
+        $(".percent").text(compPercent+'%');
+
+        for (i=1; i<=totalMainLevel; i++) {
+            if (i > maxLevel) {
+                //these levels are locked
+                console.log('locked')
+                $("#learn"+i).css({backgroundColor:'#747474'});
+                $("#quiz"+i).css({backgroundColor:'#747474'});
+                $("#completed"+i).fadeOut(0);
+                $("#crct-bg"+i).css({visibility:'hidden'});
+            } else if (i == maxLevel) {
+                //current
+                $("#completed"+i).fadeOut(0);
+            } else {
+                //already completed
+                console.log(crctDict[i])
+                if (crctDict['k'+i] != null) {
+                    $("#crct-num"+i).text(crctDict['k'+i][0]);
+                    $("#wrong-num"+i).text(crctDict['k'+i][1]-crctDict['k'+i][0]);
+                }
+            }
+        }
+
+        console.log('totalMainLevel',totalMainLevel)
+        setTimeout(() => {
+            $(".bub1").css({ left: '14%', opacity: 1 });
+            $(".bub2").css({ right: '12%', opacity: 1 });
+        }, 300);
+        setTimeout(() => {
+            $(".topic-bg").css({ transform: 'translateX(0)', opacity: '1' });
+            $(".recent-bg").css({ transform: 'translateY(-50px) scale(0)' });
+            $("h1").css({ opacity: '1' });
+            setTimeout(() => {
+                $(".completed-bg").css({ transform: 'scale(1)', opacity: 1 });
+            }, 600);
+        }, 1000);
+
+        // Scroll to the target div
+        $('.topic-bg').scrollTop($('#full-bg'+(maxLevel-3)).offset().top);
+    </script>
+</body>
+
+</html>

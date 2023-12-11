@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="res/jquery-3.6.2.min.js"></script>
+    <title>Learn Data Science</title>
+    <script>
+        courses = ['python', 'ml', 'dl'];
+    </script>
+    <style>
+        @font-face {
+            font-family: "din_bold";
+            src: url(res/font/din_bold.ttf);
+        }
+
+        html {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        body {
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #f2f3fc;
+            font-family: din_bold;
+            font-weight: 1000;
+            color: #757575;
+            user-select: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .top-bg {
+            width: 100%;
+            height: 30vh;
+            background-color: #9b52d4;
+            border-radius: 0 0 40px 40px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .bubble {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            position: absolute;
+            transition: all .3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .bub1 {
+            width: 70px;
+            height: 70px;
+            top: 30%;
+            left: 20%;
+        }
+
+        .bub2 {
+            width: 100px;
+            height: 100px;
+            top: 10%;
+            left: 60%;
+        }
+
+        .logout {
+            padding: 7px 18px;
+            background-color: red;
+            color: white;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border-radius: 10px;
+        } .logout:active {
+            opacity: .4;
+        }
+
+        h1 {
+            color: white;
+            font-weight: 100;
+            transform: translateY(-20px);
+            transition: all .3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        h2,
+        h3 {
+            width: 100%;
+            font-size: medium;
+            margin: 2px;
+            padding-left: 10px;
+            transition: all .3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        h3 {
+            text-align: center;
+        }
+
+        .rec-bg {
+            width: 100%;
+            height: 78%;
+            display: flex;
+            align-items: center;
+            overflow-x: scroll;
+        }
+
+        .recent-bg {
+            width: 90%;
+            height: 15vh;
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.525);
+            padding: 7px;
+            background-color: #ececec;
+            border-radius: 20px;
+            margin: 2vh auto;
+            transition: all .3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            display: none;
+        }
+
+        .course-bg {
+            height: 51vh;
+            overflow-y: scroll;
+        }
+
+        .course-ct-bg {
+            width: 100px;
+            /* height: 90px; */
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            transition: all .05s ease;
+        }
+
+        .course-ct-bg:active {
+            transform: scale(0.9);
+            opacity: .7;
+        }
+
+        .crc-img {
+            width: 70%;
+            height: 70%;
+        }
+
+        .course-ct {
+            width: 100%;
+            margin-bottom: 20px;
+            overflow-x: scroll;
+            display: flex;
+            transition: all .3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .course,
+        .rec-course {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 70px;
+            height: 70px;
+            border: solid 5px violet;
+            border-radius: 50%;
+        }
+
+        .rec-course {
+            width: 9vh;
+            height: 9vh;
+            margin: 0 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-bg">
+        <div class="bubble bub1"></div>
+        <div class="bubble bub2"></div>
+        <div class="logout">LOGOUT</div>
+        <h1>Data Science</h1>
+    </div>
+
+    <div class="recent-bg">
+        <h2>Recent</h2>
+        <div class="rec-bg"></div>
+    </div>
+
+    <div class="course-bg">
+        <h2>Main Course</h2>
+        <div class="course-ct">
+            <div class="course-ct-bg" onclick="CtClick('python')">
+                <div class="course"><img src="res/image/python.webp" class="crc-img"></div>
+                <h3>Python</h3>
+            </div>
+
+            <div class="course-ct-bg" onclick="CtClick('ml')">
+                <div class="course"><img src="res/image/ml.webp" class="crc-img"></div>
+                <h3>Machine Learning</h3>
+            </div>
+
+            <div class="course-ct-bg">
+                <div class="course"><img src="res/image/dl.webp" class="crc-img"></div>
+                <h3>Deep Learning</h3>
+            </div>
+
+        </div>
+
+        <h2>Maths</h2>
+        <div class="course-ct">
+            <div class="course-ct-bg">
+                <div class="course"><img src="res/image/algebra.webp" class="crc-img"></div>
+                <h3>Algebra</h3>
+            </div>
+
+            <div class="course-ct-bg">
+                <div class="course"><img src="res/image/statistics.webp" class="crc-img"></div>
+                <h3>Statistics</h3>
+            </div>
+
+        </div>
+
+        <h2>Python Library</h2>
+        <div class="course-ct">
+            <div class="course-ct-bg">
+                <div class="course"><img src="res/image/numpy.webp" class="crc-img"></div>
+                <h3>Numpy</h3>
+            </div>
+
+            <div class="course-ct-bg">
+                <div class="course"><img src="res/image/pandas.webp" class="crc-img"></div>
+                <h3>Pandas</h3>
+            </div>
+
+            <div class="course-ct-bg">
+                <div class="course"><img src="res/image/sklearn.webp" class="crc-img"></div>
+                <h3>Sklearn</h3>
+            </div>
+
+        </div>
+        <style>
+            .logout-con {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0; left: 0;
+                display: none;
+                justify-content: center;
+                align-items: center;
+                background-color: rgba(0, 0, 0, 0.525);
+            }
+            .logout-bg {
+                width: 300px;
+                background-color: white;
+                border-radius: 10px;
+                overflow: hidden;
+                animation: logout-bg .4s ease-in-out 1;
+            } @keyframes logout-bg {
+                0% {transform: scale(0); opacity: 0;}
+                100% {transform: scale(1); opacity: 1;}
+            }
+            .log-ti {
+                text-align: center;
+                font-size: xx-large;
+                font-weight: 600;
+                margin: 10px 0;
+                color: #161616;
+            }
+            .log-des {
+                text-align: center;
+                font-size: x-large;
+                font-weight: 100;
+                margin: 10px 0;
+
+            }
+            .log-btn-bg {
+                display: flex;
+            }
+            .log-btn {
+                width: 50%;
+                height: 100%;
+                text-align: center;
+                color: white;
+                font-size: larger;
+                padding: 15px 0;
+            } .log-btn:active {
+                opacity: .4;
+            }
+        </style>
+        <div class="logout-con">
+            <div class="logout-bg">
+                <div class="log-ti">LOGOUT</div>
+                <div class="log-des">Are you sure to logout?</div>
+                <div class="log-btn-bg">
+                    <div class="log-btn cancel-btn" style="background-color: #9b52d4;">Cancel</div>
+                    <div class="log-btn logout-btn" style="background-color: red;">Logout</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        var initialised = false;
+
+        function CheckForSync(type='store') {
+            var sync = JSON.parse(localStorage.sync);
+
+            if (type == 'signout') {
+                var threshold = 0;
+            } else {
+                var threshold = 3
+            }
+            console.log('threshold', threshold);
+            for (i in sync) {
+                console.log('sync[i]',sync[i]);
+                if (sync[i] > threshold) {
+                    if (!initialised) {
+                        console.log('Firebase is initialising...')
+                        initialiseFirebase();
+                        initialised = true;
+                    }
+                    Sync(i);
+                }
+            }
+
+            if (type == 'signout') {
+                var sync = JSON.parse(localStorage.sync);
+
+                if (type == "signout") {
+                    if (!initialised) {
+                        console.log('Firebase is initialising...')
+                        initialiseFirebase();
+                        initialised = true;
+                    }
+                    const auth = getAuth();
+                    signOut(auth).then(() => {
+                        // Sign-out successful.
+                        localStorage.clear();
+                        // location.replace("login.html");
+                    }).catch((error) => {
+                        // An error happened.
+                        console.log(error);
+                        $(".error-txt").fadeIn();
+                    });
+                }
+            }
+        }
+
+        function initialiseFirebase() {
+            const firebaseConfig = {
+                apiKey: "AIzaSyA46UoF4p21czsWJ_bIE3_0p8JToLBS0-c",
+                authDomain: "data-science-c75a5.firebaseapp.com",
+                projectId: "data-science-c75a5",
+                storageBucket: "data-science-c75a5.appspot.com",
+                messagingSenderId: "378209421984",
+                appId: "1:378209421984:web:9183a9d0379741675a17c5",
+                // databaseURL: "https://data-science-c75a5-default-rtdb.asia-southeast1.firebasedatabase.app"
+            };
+
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth();
+            console.log("auth is", auth);
+
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    // User logged in already or has just logged in.
+                    console.log(user.uid);
+                } else {
+                    // User not logged in or has just logged out.
+                    alert("User Logout")
+                    location.replace("login.html");
+                }
+            });
+        }
+
+        function Sync(course) {
+            const db = getDatabase();
+            var data_ = JSON.parse(localStorage.getItem(course));
+            console.log('data_', data_);
+            set(ref(db, 'users/' + localStorage.uid + '/'+course), {
+                x:data_,
+            }).then(() => {
+                // Data saved successfully!
+                console.log(`Sync for ${course} Saved Successfully`);
+                var sync = JSON.parse(localStorage.sync);
+                sync[course] = 0;
+                localStorage.sync = JSON.stringify(sync);
+            }).catch((error) => {
+                // The write failed...
+                console.log(`Sync Error for ${course}:`, error);
+            });
+        }
+
+        CheckForSync();
+
+        $(".logout").click(function() {
+            setTimeout(() => {
+                $(".logout-con").css({display:'flex'});
+            }, 400);
+        });
+        $(".logout-btn").click(function() {
+            CheckForSync('signout');
+            $(".log-des").text('Logging out. Please wait...')
+        });
+        $(".cancel-btn").click(function() {
+            $(".logout-con").fadeOut();
+        });
+    </script>
+    <script>
+        function Outro() {
+            setTimeout(() => {
+                $(".course-ct, h2").css({ transform: 'translateX(100vw)' });
+                $(".recent-bg").css({ transform: 'translateY(-50px) scale(0)' });
+                $("h1").css({ opacity: '0' })
+            }, 100);
+            setTimeout(() => {
+                $(".bub1").css({ left: '5%', opacity: 0 });
+                $(".bub2").css({ left: '95%', opacity: 0 });
+            }, 300);
+        }
+
+        if (localStorage.sync == null) {
+            localStorage.sync = JSON.stringify({});
+        }
+
+        function CtClick(str) {
+            
+            if (localStorage.getItem(str) == null) {
+                //not already learning
+                dict = {"level": 1,"crct": {"k1":[0,0]}};
+                localStorage.setItem(str, JSON.stringify(dict));
+            }
+            localStorage.openedType = str;
+            Outro();
+            setTimeout(() => {
+                parent.location = 'topics.html'
+            }, 700);
+        }
+
+        isRecentBg = false;
+        for (i in courses) {
+            if (localStorage.getItem(courses[i]) != null) {
+                isRecentBg=true;
+                $(".recent-bg").fadeIn(0);
+                $(".rec-bg").append(`
+                <div class="course-ct-bg" onclick="CtClick('${courses[i]}')">
+                    <div class="rec-course"><img src="res/image/${courses[i]}.webp" class="crc-img"></div>
+                </div>
+                `);
+            }
+        }
+
+        if (!isRecentBg) {
+            //Recent-bg is not showing
+            $(".course-bg").css({height:'70vh'});
+        }
+    </script>
+</body>
+
+</html>

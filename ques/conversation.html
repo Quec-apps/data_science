@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../res/jquery-3.6.2.min.js"></script>
+    <title>Image</title>
+    <style>
+        @font-face {
+            font-family: berlin-bold;
+            src: url(../res/font/din_bold.ttf);
+        }
+
+        @font-face {
+            font-family: berlin-regular;
+            src: url(../res/font/din_normal.ttf);
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            font-family: berlin-regular;
+            user-select: none;
+            color: #6f6f6f;
+        }
+
+        .txt-bg {
+            height: 5%;
+            font-size: 14px;
+            padding-left: 2vw;
+            font-family: berlin-bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .txt {
+            width: 80%;
+        }
+
+        .report {
+            width: 20%;
+            display: flex;
+            justify-content: flex-end;
+            font-size: 13px;
+            color: #d72828;
+            padding-right: 5px;
+            z-index: 10;
+        }
+
+        .report:active {
+            opacity: .7;
+        }
+
+        .report-img {
+            width: 14px;
+            height: 14px;
+        }
+
+        .ques-bg {
+            height: 10%;
+            display: flex;
+            align-items: center;
+            padding-left: 2vw;
+        }
+
+        .voice-img-bg {
+            width: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .voice-img {
+            width: 20px;
+            height: 20px;
+            background-color: #0030ed;
+            box-shadow: 0px 3px #00009a;
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .voice-img-bg:active {
+            box-shadow: 0px 0px #bebebe;
+            transform: translateY(3px);
+        }
+
+        .ques-txt {
+            font-size: 5vw;
+            margin-left: 3vw;
+        }
+
+        .img-bg {
+            width: 100vw;
+            height: 70%;
+            display: flex;
+            justify-content: space-around;
+            align-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .img-ct {
+            width: 40vw;
+            height: 30vh;
+            border-radius: 10px;
+            border-style: solid;
+            border-width: 1.5vw;
+            border-color: #6f6f6f;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: space-around;
+        }
+
+        .img-ct-img {
+            width: 20vw;
+            height: 20vw;
+        }
+
+        .img-ct-txt {
+            width: 100%;
+            text-align: center;
+            font-size: 4vw;
+        }
+
+        .btm {
+            height: 10%;
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            flex-wrap: wrap;
+        }
+
+        .gray-btn,
+        .green-btn,
+        .red-btn {
+            width: 90vw;
+            padding: 10px 0;
+            font-size: 5.5vw;
+            font-family: berlin-bold;
+            background-color: #b6b6b6;
+            color: white;
+            border-radius: 10px;
+            box-shadow: 1px 3px #696969;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gray-btn:active {
+            box-shadow: 0px 0px #012201 !important;
+            transform: translate(1px, 3px);
+        }
+
+        .green-btn:active {
+            box-shadow: 0px 0px #012201 !important;
+            transform: translate(1px, 3px);
+        }
+
+        .red-btn:active {
+            box-shadow: 0px 0px #012201 !important;
+            transform: translate(1px, 3px);
+        }
+
+        .green-btn {
+            background-color: #01a80c;
+            box-shadow: 1px 3px #01620b;
+        }
+
+        .red-btn {
+            background-color: #b91111;
+            box-shadow: 1px 3px #620101;
+        }
+
+        .result-bg {
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+
+        .result-ct {
+            width: 100vw;
+            height: 20vh;
+            background-color: #20cd20da;
+            position: fixed;
+            top: 80vh;
+            left: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: center;
+            transform: translateY(100%);
+            opacity: 0;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .result-txt {
+            width: 90vw;
+            font-size: 6vw;
+            color: white;
+            padding: 1vh 5vw;
+            font-family: berlin-bold;
+        }
+
+        .new-word-bg {
+            width: 100%;
+            height: 5%;
+            visibility: hidden;
+        }
+
+        .new-word-ct {
+            display: flex;
+            align-items: center;
+        }
+
+        .new-txt {
+            color: #ce82fe;
+            padding-left: 4vw;
+            font-size: 4vw;
+            font-family: berlin-bold;
+        }
+
+        #new-word,
+        #translated-txt {
+            padding-left: 2vw;
+            color: #49c0f8;
+            font-size: 5vw;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        if (localStorage.darkMode == null) $('body').css({ color: 'black' });
+        else $('body').css({ color: 'white' });
+
+        // currentLang = window.parent.currentLang;
+        // yourLang = localStorage.yourLang;
+        // langDict = JSON.parse(localStorage.langDict);
+        // currentLevel = langDict[currentLang + "-" + yourLang]
+        // lessonDict = JSON.parse(localStorage.lessonDict);
+        // currentLesson = JSON.parse(lessonDict[currentLang + "-" + yourLang]);
+        openedLevel = localStorage.openedLevel;
+        currentLang = localStorage.currentLang; yourLang = localStorage.yourLang;
+
+        currentSection=localStorage.currentSection;
+
+        $("body").prepend(`<script src="../res/var/${currentLang}/${currentLang}-${yourLang}/s${currentSection}/l${openedLevel}.js" id="_script">`);
+    </script>
+
+    <div class="txt-bg">
+        <div class="txt"></div>
+        <div class="report"><img src="../res/image/error.png" class="report-img" alt="error"> Report</div>
+    </div>
+
+    <style>
+        .ct {
+            width: 100%;
+            height: 85%;
+            overflow-y: scroll;
+        }
+
+        .box-bg {
+            display: flex;
+            justify-content: flex-start;
+            margin: 20px 0;
+        }
+
+        .box-bg-r {
+            justify-content: flex-end;
+        }
+
+        .box {
+            width: fit-content;
+            padding: 10px 7px;
+            border: solid 4px #717170;
+            border-radius: 10px;
+            position: relative;
+            margin: 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .arrow-img {
+            width: 15px;
+            position: absolute;
+            left: -14px;
+        }
+
+        .arrow-img-r {
+            left: 100%;
+            transform: rotate(180deg);
+        }
+        .ques {
+            font-size: medium;
+        }
+        .trans {
+            font-size: small;
+            margin-left: 20px;
+        }
+    </style>
+
+    <div class="ct"></div>
+
+    <div class="btm">
+        <div class="green-btn continue-btn">CONTINUE</div>
+    </div>
+    <audio src="../res/voice/correct.mp3" id="correct-aud"></audio>
+    <script>
+        appendStr = window.parent.appendStr;
+
+        quesLen = window[appendStr+"-len"+window.parent.chapter];
+        currentQues = 1;
+        console.log(window.parent.chapter)
+        console.log(appendStr+"-q"+1+"-l"+window.parent.chapter);
+
+        function AudioPlay(id_) {
+            document.getElementById('aud'+id_).play();
+        }
+        for (i=1; i<=quesLen; i++) {
+            console.log(i);
+            if (window[appendStr+"-q"+i+"-l"+window.parent.chapter] == null) {
+                //its a right side conversation
+                $(".ct").append(`
+                <div class="box-bg box-bg-r">
+                    <div class="box">
+                        <img src="../res/image/arrow.webp" class="arrow-img arrow-img-r">
+                        <div class="voice-img-bg"><img src="../res/image/speaker.svg" class="voice-img" onclick='AudioPlay(${i})'></div>
+                        <audio id='aud${i}' src="../res/voice/${window[appendStr+"-q"+i+"-m"+window.parent.chapter]}"></audio>
+                        <div class="box-ct">
+                            <div class="ques">${window[appendStr+"-q"+i+"-r"+window.parent.chapter]}</div>
+                            <div class="trans">${window[appendStr+"-t"+i+"-r"+window.parent.chapter]}</div>
+                        </div>
+                    </div>
+                </div>
+                `);
+            } else {
+                $(".ct").append(`
+                <div class="box-bg">
+                    <div class="box">
+                        <img src="../res/image/arrow.webp" class="arrow-img">
+                        <div class="voice-img-bg"><img src="../res/image/speaker.svg" class="voice-img" onclick='AudioPlay(${i})'></div>
+                        <audio id='aud${i}' src="../res/voice/${window[appendStr+"-q"+i+"-m"+window.parent.chapter]}"></audio>
+                        <div class="box-ct">
+                            <div class="ques">${window[appendStr+"-q"+i+"-l"+window.parent.chapter]}</div>
+                            <div class="trans">${window[appendStr+"-t"+i+"-l"+window.parent.chapter]}</div>
+                        </div>
+                    </div>
+                </div>
+                `);
+            }
+        }
+
+        $(".ti").text(window[appendStr + "-ti" + window.parent.chapter]);
+        // $(".msg").text();
+
+
+        $(".continue-btn").click(function () {
+            localStorage.fullTotalAns--;
+            parent.next();
+            $(".continue-btn").off();
+        });
+
+        $(".report").click(function () {
+            window.parent.location = `
+mailto:vlearn.language@gmail.com?subject=Error%20reporting&
+body=${currentLang}/${yourLang}%20opnLvl-${openedLevel}%20curLes-${appendStr}%20chptr-${window.parent.chapter}%20prvLvl-${window.parent.openedPreviousLevel}%0D%0A
+(Please%20dont%20edit%20above%20line)%0D%0A
+(Write%20something%20below%20to%20clarify%20the%20error)
+`;
+        });
+    </script>
+</body>
+
+</html>
